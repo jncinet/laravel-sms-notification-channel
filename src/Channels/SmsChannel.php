@@ -2,6 +2,8 @@
 
 namespace Jncinet\Notifications\Channels;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\AnonymousNotifiable;
 use Illuminate\Notifications\Notification;
 
 class SmsChannel
@@ -14,13 +16,25 @@ class SmsChannel
      */
     public function send($notifiable, Notification $notification)
     {
-        $mobile = $notifiable->routeNotificationFor('Sms');
+        if ($notifiable instanceof Model) {
+            $mobile = $notifiable->routeNotificationFor('Sms');
+        } elseif ($notifiable instanceof AnonymousNotifiable) {
+            if (isset($notifiable->routes['easy-sms'])) {
+                $mobile = $notifiable->routes['easy-sms'];
+            } elseif (isset($notifiable->routes[__CLASS__])) {
+                $mobile = $notifiable->routes[__CLASS__];
+            } else {
+                return;
+            }
+        } else {
+            return;
+        }
 
         if (!preg_match("/^1[345789]\d{9}$/", $mobile)) {
             return;
         }
 
-        $message = $notification->toSms($notifiable);
+        $message = $notification->toEasySms($notifiable);
 
         app('easy-sms')->send($mobile, $message);
     }
