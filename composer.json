@@ -1,0 +1,32 @@
+{
+  "name": "jncinet/laravel-sms-notification-channel",
+  "description": "Laravel SMS Notifications.",
+  "keywords": [
+    "wechat",
+    "notification",
+    "sms"
+  ],
+  "homepage": "https://www.zhangye.org.cn",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "zhangye",
+      "email": "y@qilephp.com"
+    }
+  ],
+  "require": {
+    "jncinet/laravel-easy-sms": ">=1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Jncinet\\Notifications\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Jncinet\\Notifications\\SmsChannelServiceProvider"
+      ]
+    }
+  }
+}
